@@ -1,3 +1,6 @@
+# Benjamin Good
+# 2022-04-25
+# CS 415
 import random
 from gen_epsilon import *
 
@@ -6,7 +9,7 @@ class Bandit:
         self.base = base
     
     def run(self):
-        return self.base * random.random()
+        return self.base * (random.random() * 2)
 
 class Agent:
 
@@ -32,9 +35,12 @@ class Agent:
 
 
 def generate_bandits(n):
+    print("Generating bandits")
     bandits = []
     for i in range(n):
-        b = Bandit(base=random.randint(1, 20))
+        b = Bandit(base=random.randint(1, 500))
+        print(b.base)
+
         bandits.append(b)
     
     return bandits
@@ -48,19 +54,25 @@ def generate_pool(poolsize):
 
 def run_testbed(epsilon, testbed):
     agent = Agent(testbed)
-    for i in range(100):
+    for i in range(1000):
         if random.random() < epsilon:
             agent.getrand()
         else:
             agent.getbest()
         
         reward = agent.pick[0].run()
-        if agent.pick[2] == 0:
-            agent.pick[1] = reward
         agent.pick[2] += 1
+        if agent.pick[2] == 1:
+            agent.pick[1] = reward
+        else:
+            agent.pick[1] = agent.pick[1] + 1/(agent.pick[2]) * (reward - agent.pick[1])
+        """ agent.pick[2] += 1
         # computing the estimate
-        agent.pick[1] = agent.pick[1] + 1/(agent.pick[2]) * (reward - agent.pick[1])
+        agent.pick[1] = agent.pick[1] + 1/(agent.pick[2]) * (reward - agent.pick[1]) """
         agent.score += reward
+    
+    # for_printing = [[option[1], option[2]] for option in agent.options]
+    # print(for_printing)
     
     return agent.score
 
@@ -100,9 +112,9 @@ def eval(ind, testbed):
 
 
 def main(gens):
-    pool = generate_pool(10)
+    pool = generate_pool(20)
     # create a 10-armed testbed
-    testbed = generate_bandits(10)
+    testbed = generate_bandits(100)
     
     for i in range(gens):
         fitness_pool = []
@@ -122,7 +134,7 @@ def main(gens):
             next_gen.append(child)
         
         next_gen.append(fittest)
-        print("Fittest: {}".format(fittest.run()))
+        # print("Fittest: {}".format(fittest.run()))
 
         pool = next_gen
     
@@ -131,12 +143,10 @@ def main(gens):
     for ind in pool:
             ind_score = eval(ind, testbed)
             fitness_pool.append([ind, ind_score])
+            # print("Epsilon: {}\nScore: {}".format(ind.run(), eval(ind, testbed)))
     
     return get_fittest(fitness_pool)
 
 if __name__ == "__main__":
-    print("-- Start --")
-    ind = main(50)
-    print(" -- End --")
-
-        
+    ind = main(40)
+    print(ind.run())
