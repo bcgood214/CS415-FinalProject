@@ -1,13 +1,25 @@
 def mult(x, y):
-    return x*y
+    result = x*y
+    if result > 1.0:
+        return 1.0
+    return result
 
 def add(x, y):
-    return x+y
+    result = x+y
+    if result > 1.0:
+        return 1.0
+    return result
 
 def sub(x, y):
-    return x-y
+    result = x-y
+    if result < 0.0:
+        return 0.0
+    return result
 
 def div(x, y):
     if y == 0:
         return 0
-    return x/y
+    result = x/y
+    if result > 1.0:
+        return 1.0
+    return result

@@ -35,11 +35,11 @@ class Agent:
 
 
 def generate_bandits(n):
-    print("Generating bandits")
+    # print("Generating bandits")
     bandits = []
     for i in range(n):
         b = Bandit(base=random.randint(1, 500))
-        print(b.base)
+        # print(b.base)
 
         bandits.append(b)
     
@@ -112,17 +112,19 @@ def eval(ind, testbed):
 
 
 def main(gens):
-    pool = generate_pool(20)
+    pool = generate_pool(40)
     # create a 10-armed testbed
     testbed = generate_bandits(100)
     
     for i in range(gens):
         fitness_pool = []
         next_gen = []
+        # print("Pool #{}".format(i))
 
         for ind in pool:
             ind_score = eval(ind, testbed)
             fitness_pool.append([ind, ind_score])
+            # print(ind.run())
         
         fittest = get_fittest(fitness_pool)
         
@@ -130,6 +132,7 @@ def main(gens):
         scores = [elem[1] for elem in fitness_pool]
         for j in range(len(pool) - 1):
             parents = random.choices(inds, weights=scores, k=2)
+            # print("Parents: {}, {}".format(parents[0].run(), parents[1].run()))
             child = recombine(parents[0], parents[1])
             next_gen.append(child)
         
@@ -148,5 +151,5 @@ def main(gens):
     return get_fittest(fitness_pool)
 
 if __name__ == "__main__":
-    ind = main(40)
+    ind = main(50)
     print(ind.run())
