@@ -14,7 +14,7 @@ class Node:
 			self.left.print_tree(level + 1)
 	
 	def run(self):
-		if type(self.target) == int:
+		if type(self.target) == float:
 			return self.target
 		
 		return self.target(self.left.run(), self.right.run())
@@ -110,9 +110,4 @@ if __name__ == "__main__":
 	p1 = gen_ind(Node(), no_term=True)
 	p2 = gen_ind(Node(), no_term=True)
 	child = recombine(p1, p2)
-	print("Parent #1")
-	p1.print_tree()
-	print("Parent #2")
-	p2.print_tree()
-	print("Child")
-	child.print_tree()
+	print(child.run())
